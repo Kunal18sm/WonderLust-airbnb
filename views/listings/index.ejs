@@ -36,36 +36,32 @@
                 </div>
 
                 <div class="filter">
-                    <div><i class="fa-solid fa-mountain-sun"></i></div>
-                    <p>Mountains</p>
+                    <div><i class="fa-solid fa-wifi"></i></div>
+                    <p>Free-wifi</p>
                 </div>
                 <div class="filter">
-                    <div><i class="fa-solid fa-person-swimming"></i></div>
-                    <p>Pools</p>
+                    <div><i class="fa-solid fa-earth-americas"></i></div>
+                    <p>Earth</p>
                 </div>
                 <div class="filter">
-                    <div><i class="fa-solid fa-tents"></i></div>
-                    <p>Camping</p>
+                    <div><i class="fa-solid fa-ghost"></i></div>
+                    <p>Horror</p>
                 </div>
                 <div class="filter">
-                    <div><i class="fa-solid fa-tractor"></i></div>
-                    <p>Farms</p>
+                    <div><i class="fa-solid fa-snowflake"></i></div>
+                    <p>Snow</p>
                 </div>
                 <div class="filter">
-                    <div><i class="fa-solid fa-mountain-sun"></i></div>
-                    <p>Mountains</p>
+                    <div><i class="fa-solid fa-volcano"></i></div>
+                    <p>Volcano</p>
                 </div>
                 <div class="filter">
-                    <div><i class="fa-solid fa-person-swimming"></i></div>
-                    <p>Pools</p>
+                    <div><i class="fa-solid fa-school"></i></div>
+                    <p>School</p>
                 </div>
                 <div class="filter">
-                    <div><i class="fa-solid fa-tents"></i></div>
-                    <p>Camping</p>
-                </div>
-                <div class="filter">
-                    <div><i class="fa-solid fa-tractor"></i></div>
-                    <p>Farms</p>
+                    <div><i class="fa-solid fa-church"></i></div>
+                    <p>Church</p>
                 </div>
             </div>
 
@@ -77,7 +73,7 @@
         <div class="row row-col-lg-3 row-col-md-2 row-col-sm-1 all-listing-row">
 
             <% for(let listing of allListings){ %>
-
+                
                 <div class="listing-card mt-4" style="width: 25rem; ">
                     <a href="/listings/<%= listing._id %>" class="list-link">
                         <img src="<%= listing.image.url %>" class="card-img-top" alt="..." style="height: 19rem;">
@@ -91,7 +87,8 @@
                         </div>
                     </a>
                 </div>
-                <% } %>
+            <% } %>
+
         </div>
 
 

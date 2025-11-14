@@ -1,8 +1,23 @@
 const Listing = require("../models/listing");
+const { cloudinary } = require("../cloudConfig");
+const Review = require("../models/review");
+
 
 module.exports.index = async (req, res) => {
     const allListings = await Listing.find({});
     res.render("listings/index.ejs", { allListings });
+};
+
+module.exports.filterByCountry = async(req, res) => {
+    let {CountryName} = req.query;
+    const allListings = await Listing.find({ country: CountryName.toLowerCase() });
+    res.render("listings/index.ejs", { allListings, CountryName });
+};
+
+module.exports.filterBy = async(req, res) => {
+    let {by} = req.query;
+    const allListings = await Listing.find({ tags: by });
+    res.render("listings/index.ejs", { allListings,by });
 };
 
 module.exports.formForNewListing = (req, res) => {
@@ -30,26 +45,6 @@ module.exports.createListing = async (req, res, next) => {
     const newList = new Listing(req.body.listing);
     newList.owner = req.user._id;
     newList.image = {url,filename};
-
-    // const location = req.body.listing.location;
-    // const response = await fetch(
-    //     `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(location)}`,
-    
-    //     {
-    //         headers: {
-    //         "User-Agent": "your-app-name (your-email@example.com)"
-    //         }
-    //     }
-    // );
-
-    // const coordinates = await response.json();
-    // const latitude = coordinates[0].lat ;
-    // const longitude = coordinates[0].lon ;
-
-    // newList.geometry = {
-    // type: "Point",
-    // coordinates: [longitude, latitude]   // ⚠️ GeoJSON = [longitude, latitude]
-    // };
     
     // Save listing
     await newList.save();
@@ -87,8 +82,12 @@ module.exports.updateListing = async (req, res) => {
 
 module.exports.deleteListing = async (req, res) => {
     let { id } = req.params;
+    const listing = await Listing.findById(id);
+    await cloudinary.uploader.destroy(listing.image.filename);
+    await Review.deleteMany({ _id: { $in: listing.reviews } });
     let deleted = await Listing.findByIdAndDelete(id);
     console.log(deleted);
+    
     req.flash("success","Listing Deleted!");
     res.redirect("/listings");
 };

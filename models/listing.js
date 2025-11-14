@@ -30,6 +30,7 @@ const listingSchema = new Schema({
 
     country:{
         type: String,
+        lowercase: true,
         require: true,
     },
 
@@ -43,17 +44,10 @@ const listingSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: "user",
     },
-    // geometry: {
-    //     type: {
-    //         type: String,
-    //         enum: ['Point'],
-    //         required: true
-    //     },
-    //     coordinates: {
-    //         type: [Number],
-    //         required: true
-    //     }
-    // }
+    
+    tags:[String],
+
+
 })
 
 const Listing = mongoose.model("Listing", listingSchema);

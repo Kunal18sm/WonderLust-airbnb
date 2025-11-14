@@ -9,10 +9,18 @@ const multer  = require('multer');
 const upload = multer({ storage });
 
 
+
+router.route("/country")
+    .get(wrapAsync(listingController.filterByCountry));
+
+router.route("/filter")
+    .get(wrapAsync(listingController.filterBy));
+
 router
     .route("/")
     // all listed place INDEX ROUTE
     .get(wrapAsync( listingController.index ))
+
     // create new
     .post(
         isLoggedIn,
@@ -20,6 +28,8 @@ router
         upload.single('listing[image]'), 
         wrapAsync(listingController.createListing)
     );
+
+
 
 // to show form for adding new list
 router.get("/new", isLoggedIn, listingController.formForNewListing);
@@ -46,7 +56,5 @@ router
 router.get("/:id/edit",
     isLoggedIn , isOwner ,
     wrapAsync( listingController.renderEditForm));
-
-
 
 module.exports = router;

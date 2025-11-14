@@ -30,7 +30,7 @@ app.set("view engine", "ejs");                           // 2.
 app.set("views", path.join(__dirname, "views"));        // 2. 
 app.use(express.urlencoded({ extended: true }));          // 4. to parse data and make it available in req.body
 app.engine("ejs", ejsMate);                              // 3.
-app.use(express.static(path.join(__dirname, "/public")));// 5. to access static files like css files from public folder
+app.use(express.static(path.join(__dirname, "/public")));  // 5. to access static files like css files from public folder
 
 const store = MongoStore.create({
     mongoUrl: dbUrl,
@@ -39,7 +39,7 @@ const store = MongoStore.create({
     },
     touchAfter: 48*3600,
 });
-store.on("error", () => {
+store.on("error", (err) => {
     console.log("ERROR in Mongo Session Store",err);
 })
 
@@ -57,12 +57,13 @@ const sessionOptions = {
 
 app.use(session(sessionOptions));
 app.use(flash());
-passport.serializeUser(User.serializeUser());
-passport.deserializeUser(User.deserializeUser());
 
 app.use(passport.initialize());
 app.use(passport.session());
+
 passport.use(new localStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 
 app.use((req,res,next) =>{
     res.locals.success = req.flash("success");
@@ -90,30 +91,14 @@ app.use("/listings",listingRouter);
 app.use("/listings/:id/reviews",reviewRouter);
 app.use("/",userRouter);
 
-//demo user
-app.get("/demouser", async (req,res)=>{
-    let fakeUser = new User({
-        email:"student@gmail.com",
-        username: "sigma-student"
-    });
-    console.log("saveduser");
-    
-    let registeredUser = await User.register(fakeUser,"passwordSiya");
-    res.send(registeredUser);
-});
-
-
 // root route 
-
 app.all(/.*/,(req,res,next) => {
-    // next(new ExpressError(404,"Page Not Found!"));
-    res.redirect("/listings");
+    next(new ExpressError(404,"Page Not Found!"));
 });
 
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;
   const message = err.message || "Something went wrong!";
-  
   res.render("error.ejs", {message});
 //   res.status(statusCode).send(message);
 });
@@ -123,8 +108,6 @@ const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
     console.log(`Server is listening on port ${PORT}`);
 });
-
-
 
 // http://localhost:8080/listings
 
